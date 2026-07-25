@@ -1,242 +1,143 @@
-import os
-import glob
-import pandas as pd
-import numpy as np
 import streamlit as st
+import pandas as pd
 import plotly.express as px
 
-# --- PAGE CONFIGURATION ---
-st.set_page_config(
-    page_title="Road Accident Survey & Analysis Dashboard",
-    page_icon="🚨",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# Page configuration
+st.set_page_config(page_title="Road Accident Dashboard", page_icon="🚨", layout="wide")
 
-# Dark Theme Custom Styling
-st.markdown("""
-    <style>
-    .main {
-        background-color: #0E1117;
-    }
-    div[data-testid="stMetricValue"] {
-        font-size: 38px;
-        font-weight: bold;
-        color: #FFFFFF;
-    }
-    div[data-testid="stMetricLabel"] {
-        font-size: 16px;
-        color: #A0AAB4;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# --- AUTOMATED DATA CLEANING FUNCTION ---
-@st.cache_data
-def load_and_clean_data():
-    possible_files = ['RTA Dataset.csv', 'RTA Dataset.xls', 'RTA Dataset.xlsx']
-    found_files = glob.glob('*RTA*') + glob.glob('*rta*') + glob.glob('*.csv') + glob.glob('*.xls*')
-    all_targets = possible_files + found_files
-
-    df = None
-    for file_path in all_targets:
-        if os.path.exists(file_path):
-            try:
-                df = pd.read_csv(file_path)
-                break
-            except Exception:
-                try:
-                    df = pd.read_excel(file_path)
-                    break
-                except Exception:
-                    continue
-
-    if df is None:
-        st.error("❌ Dataset file nahi mili! Kripya check karein ki 'RTA Dataset.csv' ya 'RTA Dataset.xls' GitHub repo me uploaded hai ya nahi.")
-        st.stop()
-
-    # --- DATA CLEANING STEPS ---
-    
-    # 1. Fill missing values (NaNs) with 'Unknown' for string columns
-    categorical_cols = df.select_dtypes(include=['object']).columns
-    for col in categorical_cols:
-        df[col] = df[col].fillna("Unknown")
-        # Standardize 'na' strings if present
-        df[col] = df[col].replace({'na': 'Unknown', 'n/a': 'Unknown', 'NA': 'Unknown'})
-
-    # 2. Fill missing numeric values with Median
-    numeric_cols = df.select_dtypes(include=[np.number]).columns
-    for col in numeric_cols:
-        df[col] = df[col].fillna(df[col].median())
-
-    # 3. Clean specific columns if available
-    if 'Number_of_casualties' in df.columns:
-        df['Number_of_casualties'] = pd.to_numeric(df['Number_of_casualties'], errors='coerce').fillna(1)
-        
-    if 'Number_of_vehicles_involved' in df.columns:
-        df['Number_of_vehicles_involved'] = pd.to_numeric(df['Number_of_vehicles_involved'], errors='coerce').fillna(1)
-
-    return df
-
-df = load_and_clean_data()
-
-# --- TITLE & HEADER ---
+# Header Section
 st.title("🚨 Road Accident Survey & Analysis Dashboard")
 st.markdown("Yeh dashboard road accident survey data ko analyze aur visualize karne ke liye banaya gaya hai.")
 
-# --- SIDEBAR FILTERS ---
+# Data Load function
+@st.cache_data
+def load_data():
+    df = pd.read_csv("RTA Dataset.csv")
+    
+    # Missing values handle karna
+    df = df.fillna("Unknown")
+    
+    return df
+
+df = load_data()
+
+# ----------------- SIDEBAR FILTERS -----------------
 st.sidebar.header("🔍 Filters")
 
-# Filter 1: Area Type
-if 'Area_accident_occured' in df.columns:
-    # Exclude 'Unknown' from filter options if preferred, or keep it
-    all_areas = [area for area in df['Area_accident_occured'].unique() if area != 'Unknown']
-    if not all_areas:
-        all_areas = df['Area_accident_occured'].unique().tolist()
-        
-    selected_area = st.sidebar.multiselect(
-        "Select Area Type:",
-        options=all_areas,
-        default=all_areas[:5] if len(all_areas) >= 5 else all_areas
-    )
-else:
-    selected_area = []
+# Filter 1: Day of Week (City ki jagah Day_of_week use kiya hai)
+all_days = list(df['Day_of_week'].unique())
+selected_days = st.sidebar.multiselect(
+    "Select Day of Week:",
+    options=all_days,
+    default=all_days
+)
 
-# Filter 2: Severity Level
-if 'Accident_severity' in df.columns:
-    all_severities = df['Accident_severity'].unique().tolist()
-    selected_severity = st.sidebar.multiselect(
-        "Select Severity Level:",
-        options=all_severities,
-        default=all_severities
-    )
-else:
-    selected_severity = []
+# Filter 2: Accident Severity
+all_severities = list(df['Accident_severity'].unique())
+selected_severities = st.sidebar.multiselect(
+    "Select Severity Level:",
+    options=all_severities,
+    default=all_severities
+)
 
-# Filtering Data Based on Selections
-filtered_df = df.copy()
-if selected_area and 'Area_accident_occured' in filtered_df.columns:
-    filtered_df = filtered_df[filtered_df['Area_accident_occured'].isin(selected_area)]
-if selected_severity and 'Accident_severity' in filtered_df.columns:
-    filtered_df = filtered_df[filtered_df['Accident_severity'].isin(selected_severity)]
+# Apply Filters to Data
+filtered_df = df[
+    (df['Day_of_week'].isin(selected_days)) & 
+    (df['Accident_severity'].isin(selected_severities))
+]
 
-# --- KEY METRICS (KPIs) ---
-st.markdown("### 📈 Key Metrics")
-col1, col2, col3, col4 = st.columns(4)
+# ----------------- KEY METRICS -----------------
+st.subheader("📈 Key Metrics")
 
 total_accidents = len(filtered_df)
-total_casualties = int(filtered_df['Number_of_casualties'].sum()) if ('Number_of_casualties' in filtered_df.columns and total_accidents > 0) else 0
 
-if 'Accident_severity' in filtered_df.columns:
-    fatal_accidents = len(filtered_df[filtered_df['Accident_severity'].astype(str).str.contains('Fatal', case=False, na=False)])
+# Total Casualties calculation (Converting to numeric safely)
+if 'Number_of_casualties' in filtered_df.columns:
+    total_casualties = pd.to_numeric(filtered_df['Number_of_casualties'], errors='coerce').sum()
 else:
-    fatal_accidents = 0
+    total_casualties = 0
 
-avg_casualties = round(filtered_df['Number_of_casualties'].mean(), 2) if ('Number_of_casualties' in filtered_df.columns and total_accidents > 0) else 0
+# Fatal Accidents count
+fatal_accidents = len(filtered_df[filtered_df['Accident_severity'].str.contains('Fatal', case=False, na=False)])
 
+# Avg Casualties per Accident
+avg_casualties = round(total_casualties / total_accidents, 2) if total_accidents > 0 else 0
+
+col1, col2, col3, col4 = st.columns(4)
 col1.metric("Total Accidents", f"{total_accidents:,}")
-col2.metric("Total Casualties", f"{total_casualties:,}")
+col2.metric("Total Casualties", f"{int(total_casualties):,}")
 col3.metric("Fatal Accidents", f"{fatal_accidents:,}")
 col4.metric("Avg Casualties / Accident", avg_casualties)
 
-st.divider()
+st.markdown("---")
 
-# --- ACCIDENT ANALYSIS CHARTS ---
-st.markdown("### 📊 Accident Analysis Charts")
+# ----------------- CHARTS & ANALYSIS -----------------
+st.subheader("📊 Accident Analysis Charts")
 
 chart_col1, chart_col2 = st.columns(2)
 
-# Chart 1: Accidents by Area & Severity (Bar Chart)
+# Chart 1: Accidents by Day of Week & Severity (Replacing City)
 with chart_col1:
-    st.subheader("Accidents by Area & Severity")
-    if not filtered_df.empty and 'Area_accident_occured' in filtered_df.columns and 'Accident_severity' in filtered_df.columns:
-        fig_area = px.bar(
-            filtered_df[filtered_df['Area_accident_occured'] != 'Unknown'], 
-            x='Area_accident_occured', 
-            color='Accident_severity', 
-            barmode='group',
-            color_discrete_sequence=px.colors.qualitative.Set2,
-            template="plotly_dark"
-        )
-        fig_area.update_layout(
-            xaxis_title="Area Type",
-            yaxis_title="Count",
-            legend_title="Severity",
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)'
-        )
-        st.plotly_chart(fig_area, use_container_width=True)
-    else:
-        st.info("No data available for selected filters.")
+    st.markdown("### Accidents by Day & Severity")
+    day_severity_df = filtered_df.groupby(['Day_of_week', 'Accident_severity']).size().reset_dropna().reset_index(name='Count')
+    
+    fig_day = px.bar(
+        day_severity_df,
+        x='Day_of_week',
+        y='Count',
+        color='Accident_severity',
+        barmode='group',
+        labels={'Day_of_week': 'Day of Week', 'Count': 'Number of Accidents'},
+        template="plotly_dark"
+    )
+    st.plotly_chart(fig_day, use_container_width=True)
 
-# Chart 2: Impact of Weather Conditions (Donut Chart)
+# Chart 2: Impact of Weather Conditions
 with chart_col2:
-    st.subheader("Impact of Weather Conditions")
-    if not filtered_df.empty and 'Weather_conditions' in filtered_df.columns:
-        fig_weather = px.pie(
-            filtered_df[filtered_df['Weather_conditions'] != 'Unknown'], 
-            names='Weather_conditions', 
-            hole=0.45,
-            color_discrete_sequence=px.colors.sequential.RdBu,
-            template="plotly_dark"
-        )
-        fig_weather.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)'
-        )
-        st.plotly_chart(fig_weather, use_container_width=True)
-    else:
-        st.info("No data available for selected filters.")
+    st.markdown("### Impact of Weather Conditions")
+    weather_df = filtered_df['Weather_conditions'].value_counts().reset_index()
+    weather_df.columns = ['Weather_conditions', 'Count']
+    
+    fig_weather = px.pie(
+        weather_df,
+        names='Weather_conditions',
+        values='Count',
+        hole=0.4,
+        template="plotly_dark"
+    )
+    st.plotly_chart(fig_weather, use_container_width=True)
 
+# ----------------- EXTRA ANALYSIS -----------------
+st.markdown("---")
 chart_col3, chart_col4 = st.columns(2)
 
-# Chart 3: Accidents by Day of Week (Histogram)
+# Chart 3: Top Causes of Accidents
 with chart_col3:
-    st.subheader("Accidents by Day of Week")
-    if not filtered_df.empty and 'Day_of_week' in filtered_df.columns and 'Accident_severity' in filtered_df.columns:
-        fig_day = px.histogram(
-            filtered_df, 
-            x='Day_of_week', 
-            color='Accident_severity',
-            color_discrete_sequence=px.colors.qualitative.Pastel,
-            template="plotly_dark"
-        )
-        fig_day.update_layout(
-            xaxis_title="Day of Week",
-            yaxis_title="Count",
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)'
-        )
-        st.plotly_chart(fig_day, use_container_width=True)
-    else:
-        st.info("No data available for selected filters.")
+    st.markdown("### Top Causes of Accidents")
+    cause_df = filtered_df['Cause_of_accident'].value_counts().head(7).reset_index()
+    cause_df.columns = ['Cause', 'Count']
+    
+    fig_cause = px.bar(
+        cause_df,
+        x='Count',
+        y='Cause',
+        orientation='h',
+        color='Count',
+        template="plotly_dark"
+    )
+    st.plotly_chart(fig_cause, use_container_width=True)
 
-# Chart 4: Top Causes of Accidents (Horizontal Bar Chart)
+# Chart 4: Accidents by Vehicle Type
 with chart_col4:
-    st.subheader("Top Causes of Accidents")
-    if not filtered_df.empty and 'Cause_of_accident' in filtered_df.columns:
-        cause_df = filtered_df[filtered_df['Cause_of_accident'] != 'Unknown']
-        cause_counts = cause_df['Cause_of_accident'].value_counts().reset_index()
-        cause_counts.columns = ['Cause', 'Count']
-        fig_cause = px.bar(
-            cause_counts.head(6), 
-            x='Count', 
-            y='Cause', 
-            orientation='h',
-            color='Count',
-            color_continuous_scale='Reds',
-            template="plotly_dark"
-        )
-        fig_cause.update_layout(
-            yaxis=dict(autorange="reverse"),
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(0,0,0,0)'
-        )
-        st.plotly_chart(fig_cause, use_container_width=True)
-    else:
-        st.info("No data available for selected filters.")
-
-# --- RAW DATA VIEW ---
-st.divider()
-st.markdown("### 📄 Cleaned Data Preview")
-st.dataframe(filtered_df, use_container_width=True)
+    st.markdown("### Accidents by Vehicle Type")
+    vehicle_df = filtered_df['Type_of_vehicle'].value_counts().head(7).reset_index()
+    vehicle_df.columns = ['Vehicle_Type', 'Count']
+    
+    fig_vehicle = px.bar(
+        vehicle_df,
+        x='Vehicle_Type',
+        y='Count',
+        color='Count',
+        template="plotly_dark"
+    )
+    st.plotly_chart(fig_vehicle, use_container_width=True)
