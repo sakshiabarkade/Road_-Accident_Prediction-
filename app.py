@@ -94,9 +94,9 @@ with col_input:
 
     submit = st.button("⚡ Analyze Severity", use_container_width=True)
 
-# ------------------------------------------------------------------------------
-# 5. PREDICTION & DISPLAY RESULTS
-# ------------------------------------------------------------------------------
+# -----------------------------
+# 5. PREDICTION & DEBUG LOGIC
+# -----------------------------
 with col_result:
     st.subheader("📊 Instant Risk Assessment")
     
@@ -105,7 +105,7 @@ with col_result:
             st.error("Model artifacts not loaded.")
         else:
             try:
-                # Build complete dictionary using 4 active inputs + defaults for the rest
+                # Complete Input Dictionary
                 input_dict = {
                     "Time": [time],
                     "Day_of_week": [day],
@@ -120,15 +120,16 @@ with col_result:
                     "Vehicle_movement": [vehicle_movement],
                     "Work_of_casuality": [work_casualty],
                     "Cause_of_accident": [cause],
-                    "Number_of_vehicles_involved": [vehicles_involved],
-                    "Number_of_casualties": [casualties]
+                    "Number_of_vehicles_involved": [int(vehicles_involved)],
+                    "Number_of_casualties": [int(casualties)]
                 }
 
                 input_df = pd.DataFrame(input_dict)
 
-                # Encoding transformation logic
-                for col, le in encoders.items():
-                    if col in input_df.columns:
+                # Robust Categorical Encoding
+                for col in input_df.columns:
+                    if col in encoders:
+                        le = encoders[col]
                         val = str(input_df[col].iloc[0]).strip().lower()
                         class_map = {str(c).strip().lower(): c for c in le.classes_}
                         
@@ -136,7 +137,11 @@ with col_result:
                             matched_class = class_map[val]
                             input_df[col] = le.transform([matched_class])[0]
                         else:
-                            input_df[col] = 0
+                            # Fallback using transform on first class
+                            input_df[col] = le.transform([le.classes_[0]])[0]
+
+                # 🔍 UNCOMMENT THIS TO DEBUG ENCODED VALUES IN STREAMLIT
+                # st.write("Model Input Data:", input_df)
 
                 # Predict
                 pred = model.predict(input_df)[0]
@@ -149,12 +154,10 @@ with col_result:
                     st.info("Low risk crash environment detected. Minor damage predicted.")
                 elif "serious" in pred_lower:
                     st.warning(f"### 🟡 Prediction: {pred_label.upper()}")
-                    st.write(" Moderate to High impact risk detected. Safety interventions required.")
+                    st.write("Moderate to High impact risk detected. Safety interventions required.")
                 else:
                     st.error(f"### 🔴 Prediction: {pred_label.upper()}")
-                    st.write(" Critical severity level predicted. Immediate safety measures recommended.")
+                    st.write("Critical severity level predicted. Immediate safety measures recommended.")
 
             except Exception as e:
                 st.error(f"Prediction Error: {e}")
-    else:
-        st.info("👈 Select parameters on the left and click **'Analyze Severity'** to generate instant results.")
