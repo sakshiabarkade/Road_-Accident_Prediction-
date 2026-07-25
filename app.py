@@ -95,69 +95,26 @@ with col_input:
     submit = st.button("⚡ Analyze Severity", use_container_width=True)
 
 # -----------------------------
-# 5. PREDICTION & DEBUG LOGIC
+# 5. PREDICTION & OUTPUT LOGIC
 # -----------------------------
-with col_result:
-    st.subheader("📊 Instant Risk Assessment")
-    
-    if submit:
-        if model is None:
-            st.error("Model artifacts not loaded.")
-        else:
-            try:
-                # Complete Input Dictionary
-                input_dict = {
-                    "Time": [time],
-                    "Day_of_week": [day],
-                    "Age_band_of_driver": [driver_age],
-                    "Driving_experience": [driver_exp],
-                    "Vehicle_driver_relation": [vehicle_relation],
-                    "Service_year_of_vehicle": [service_year],
-                    "Road_surface_type": [road_surface],
-                    "Weather_conditions": [weather],
-                    "Light_conditions": [light],
-                    "Type_of_collision": [type_collision],
-                    "Vehicle_movement": [vehicle_movement],
-                    "Work_of_casuality": [work_casualty],
-                    "Cause_of_accident": [cause],
-                    "Number_of_vehicles_involved": [int(vehicles_involved)],
-                    "Number_of_casualties": [int(casualties)]
-                }
+if "slight" in pred_lower:
+    st.success(f"### 🟢 Prediction: {pred_label.upper()}")
+    st.info("Low risk crash environment detected. Minor damage predicted.")
 
-                input_df = pd.DataFrame(input_dict)
+elif "serious" in pred_lower:
+    st.warning(f"### 🟡 Prediction: {pred_label.upper()}")
+    st.write(
+        "Moderate to High impact risk detected. Safety interventions required."
+    )
 
-                # Robust Categorical Encoding
-                for col in input_df.columns:
-                    if col in encoders:
-                        le = encoders[col]
-                        val = str(input_df[col].iloc[0]).strip().lower()
-                        class_map = {str(c).strip().lower(): c for c in le.classes_}
-                        
-                        if val in class_map:
-                            matched_class = class_map[val]
-                            input_df[col] = le.transform([matched_class])[0]
-                        else:
-                            # Fallback using transform on first class
-                            input_df[col] = le.transform([le.classes_[0]])[0]
+elif "fatal" in pred_lower:
+    st.error(f"### 🔴 Prediction: {pred_label.upper()}")
+    st.error(
+        "🚨 High probability of fatal outcome! Extreme safety protocol required."
+    )
 
-                # 🔍 UNCOMMENT THIS TO DEBUG ENCODED VALUES IN STREAMLIT
-                # st.write("Model Input Data:", input_df)
-
-                # Predict
-                pred = model.predict(input_df)[0]
-                pred_label = str(target_encoder.inverse_transform([pred])[0])
-                pred_lower = pred_label.lower()
-
-                # Visual Output Cards
-                if "slight" in pred_lower:
-                    st.success(f"### 🟢 Prediction: {pred_label.upper()}")
-                    st.info("Low risk crash environment detected. Minor damage predicted.")
-                elif "serious" in pred_lower:
-                    st.warning(f"### 🟡 Prediction: {pred_label.upper()}")
-                    st.write("Moderate to High impact risk detected. Safety interventions required.")
-                else:
-                    st.error(f"### 🔴 Prediction: {pred_label.upper()}")
-                    st.write("Critical severity level predicted. Immediate safety measures recommended.")
-
-            except Exception as e:
-                st.error(f"Prediction Error: {e}")
+else:
+    st.error(f"### 🔴 Prediction: {pred_label.upper()}")
+    st.write(
+        "Critical severity level predicted. Immediate safety measures recommended."
+    )
