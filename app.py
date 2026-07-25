@@ -1,499 +1,128 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": 1,
-   "id": "6385828e-4844-4cb7-9eb9-ba13e0e9c2b0",
-   "metadata": {},
-   "outputs": [
-    {
-     "name": "stderr",
-     "output_type": "stream",
-     "text": [
-      "2026-07-25 11:15:19.070 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.077 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.876 \n",
-      "  \u001b[33m\u001b[1mWarning:\u001b[0m to view this Streamlit app on a browser, run it with the following\n",
-      "  command:\n",
-      "\n",
-      "    streamlit run C:\\ProgramData\\anaconda3\\Lib\\site-packages\\ipykernel_launcher.py [ARGUMENTS]\n",
-      "2026-07-25 11:15:19.878 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.880 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.886 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.890 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.906 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.907 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.912 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.913 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.914 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.916 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.918 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.922 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.924 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.936 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.937 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.937 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.938 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.939 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.939 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.940 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.941 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.942 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.942 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.943 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.943 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.944 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.945 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.945 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.946 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.946 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.950 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.951 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.954 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:19.960 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.003 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.004 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.017 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.019 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.019 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.021 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.022 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.024 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.027 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.030 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.033 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.035 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.036 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.039 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.041 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.042 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.046 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.047 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.048 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.048 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.050 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.051 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.052 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.053 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.053 Session state does not function when running a script without `streamlit run`\n",
-      "2026-07-25 11:15:20.053 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.055 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.056 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.056 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.057 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.057 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.059 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.061 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.063 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.065 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.066 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.067 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.068 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.070 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.071 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.071 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.073 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.073 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.076 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.078 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.079 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.081 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.083 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.083 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.086 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.087 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.087 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.089 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.091 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.093 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.094 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.096 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.097 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.098 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.099 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.100 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.101 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.102 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.102 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.104 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.104 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.105 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.106 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.107 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.107 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.109 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.110 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.110 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.111 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.115 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.116 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.117 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.119 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.121 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.122 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.122 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.124 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.124 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.125 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.126 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.126 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.127 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.127 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.127 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.128 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.128 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.130 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.131 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.132 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.132 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.133 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.135 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.138 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.139 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.140 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.141 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.141 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.142 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.142 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.142 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.144 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.145 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.145 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.146 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.146 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.147 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.149 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.150 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.151 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.152 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.153 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.155 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.156 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.160 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.161 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.161 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.162 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.163 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.164 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.164 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.165 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.165 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.167 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.170 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.172 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.172 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.173 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.173 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.174 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.175 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.175 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.176 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.178 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.178 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.179 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.181 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.181 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.182 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.183 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.183 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.184 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.184 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n",
-      "2026-07-25 11:15:20.186 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.\n"
-     ]
-    }
-   ],
-   "source": [
-    "import streamlit as st\n",
-    "import pandas as pd\n",
-    "import numpy as np\n",
-    "import joblib\n",
-    "\n",
-    "# ------------------------------------------------------------------------------\n",
-    "# 1. PAGE CONFIGURATION & CUSTOM STYLING\n",
-    "# ------------------------------------------------------------------------------\n",
-    "st.set_page_config(\n",
-    "    page_title=\"Accident Severity Intelligence Platform\",\n",
-    "    page_icon=\"🚦\",\n",
-    "    layout=\"wide\",\n",
-    "    initial_sidebar_state=\"expanded\"\n",
-    ")\n",
-    "\n",
-    "# Professional CSS Injection\n",
-    "st.markdown(\"\"\"\n",
-    "    <style>\n",
-    "    /* Global Typography & Background Tweaks */\n",
-    "    .main {\n",
-    "        padding-top: 1.5rem;\n",
-    "    }\n",
-    "    \n",
-    "    /* Custom Card Styling */\n",
-    "    .metric-card {\n",
-    "        background-color: #f8f9fa;\n",
-    "        border-radius: 10px;\n",
-    "        padding: 1.5rem;\n",
-    "        border-left: 5px solid #2e7d32;\n",
-    "        box-shadow: 0 4px 6px rgba(0,0,0,0.05);\n",
-    "        margin-bottom: 1rem;\n",
-    "    }\n",
-    "    \n",
-    "    /* Custom Result Banners */\n",
-    "    .result-banner-slight {\n",
-    "        background-color: #e8f5e9;\n",
-    "        color: #2e7d32;\n",
-    "        padding: 20px;\n",
-    "        border-radius: 10px;\n",
-    "        border: 1px solid #a5d6a7;\n",
-    "        text-align: center;\n",
-    "        font-size: 24px;\n",
-    "        font-weight: bold;\n",
-    "    }\n",
-    "    \n",
-    "    .result-banner-serious {\n",
-    "        background-color: #fff3e0;\n",
-    "        color: #ef6c00;\n",
-    "        padding: 20px;\n",
-    "        border-radius: 10px;\n",
-    "        border: 1px solid #ffe0b2;\n",
-    "        text-align: center;\n",
-    "        font-size: 24px;\n",
-    "        font-weight: bold;\n",
-    "    }\n",
-    "    \n",
-    "    .result-banner-fatal {\n",
-    "        background-color: #ffebee;\n",
-    "        color: #c62828;\n",
-    "        padding: 20px;\n",
-    "        border-radius: 10px;\n",
-    "        border: 1px solid #ffcdd2;\n",
-    "        text-align: center;\n",
-    "        font-size: 24px;\n",
-    "        font-weight: bold;\n",
-    "    }\n",
-    "    </style>\n",
-    "\"\"\", unsafe_allow_html=True)\n",
-    "\n",
-    "\n",
-    "# ------------------------------------------------------------------------------\n",
-    "# 2. RESOURCE LOADING WITH CACHING\n",
-    "# ------------------------------------------------------------------------------\n",
-    "@st.cache_resource\n",
-    "def load_assets():\n",
-    "    try:\n",
-    "        model = joblib.load(\"xgb_accident_model.pkl\")\n",
-    "        encoders = joblib.load(\"label_encoders.pkl\")\n",
-    "        target_encoder = joblib.load(\"target_encoder.pkl\")\n",
-    "        return model, encoders, target_encoder\n",
-    "    except Exception as e:\n",
-    "        st.error(f\"⚠️ Error loading model artifacts: {e}\")\n",
-    "        return None, None, None\n",
-    "\n",
-    "model, encoders, target_encoder = load_assets()\n",
-    "\n",
-    "# ------------------------------------------------------------------------------\n",
-    "# 3. STATIC UI OPTIONS\n",
-    "# ------------------------------------------------------------------------------\n",
-    "OPTIONS = {\n",
-    "    \"time\": [\"Day\", \"Night\"],\n",
-    "    \"day\": ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],\n",
-    "    \"age\": ['Under 18', '18-30', '31-50', 'Over 51'],\n",
-    "    \"driver_exp\": ['Below 1yr', '1-2yr', '2-5yr', '5-10yr', 'Above 10yr', 'No Licence'],\n",
-    "    \"vehicle_relation\": ['Employee', 'Owner'],\n",
-    "    \"service_year\": ['Below 1yr', '1-2yr', '2-5yrs', '5-10yrs', 'Above 10yr'],\n",
-    "    \"road_surface\": ['Asphalt roads', 'Gravel roads', 'Earth roads', 'Other'],\n",
-    "    \"weather\": ['Clear', 'Rainy', 'Foggy', 'Snowy'],\n",
-    "    \"light\": ['Daylight', 'Darkness - lights lit', 'Darkness - no lighting'],\n",
-    "    \"collision\": ['Vehicle with vehicle', 'Rollover', 'Collision with pedestrian', 'Collision with animal'],\n",
-    "    \"movement\": ['Going straight', 'U-turn', 'Reversing', 'Overtaking', 'Waiting to go'],\n",
-    "    \"work\": ['Driver', 'Employee', 'Self-employed', 'Student', 'Unemployed'],\n",
-    "    \"cause\": ['Overspeed', 'No distancing', 'Careless driving', 'Overturning', 'Improper parking']\n",
-    "}\n",
-    "\n",
-    "# ------------------------------------------------------------------------------\n",
-    "# 4. DASHBOARD HEADER & SIDEBAR\n",
-    "# ------------------------------------------------------------------------------\n",
-    "st.title(\"🚨 Road Accident Severity Intelligence System\")\n",
-    "st.caption(\"AI-powered predictive dashboard driven by XGBoost Machine Learning Engine.\")\n",
-    "\n",
-    "# Sidebar - System Control\n",
-    "with st.sidebar:\n",
-    "    st.header(\"⚙️ Control Panel\")\n",
-    "    st.info(\"**System Status:** Operational 🟢\\n\\n**Engine:** XGBoost Classifier v1.2\")\n",
-    "    st.markdown(\"---\")\n",
-    "    st.markdown(\"### 📊 Dataset Parameters\")\n",
-    "    st.markdown(\"- **Categorical Features:** 13\\n- **Numerical Features:** 2\\n- **Target Classes:** 3 (Slight, Serious, Fatal)\")\n",
-    "    st.markdown(\"---\")\n",
-    "    st.caption(\"Developed for Transportation Safety Analytics\")\n",
-    "\n",
-    "# Main Navigation Tabs\n",
-    "tab1, tab2 = st.tabs([\"🔮 Predictive Inference\", \"📈 Model Insights & Analytics\"])\n",
-    "\n",
-    "# ------------------------------------------------------------------------------\n",
-    "# 5. TAB 1: PREDICTIVE INFERENCE ENGINE\n",
-    "# ------------------------------------------------------------------------------\n",
-    "with tab1:\n",
-    "    with st.form(\"prediction_form\"):\n",
-    "        st.subheader(\"📋 Input Parameter Matrix\")\n",
-    "        \n",
-    "        col1, col2, col3 = st.columns(3)\n",
-    "\n",
-    "        with col1:\n",
-    "            st.markdown(\"##### 🚗 Driver & Vehicle\")\n",
-    "            driver_age = st.selectbox(\"Driver Age Band\", OPTIONS[\"age\"])\n",
-    "            driver_exp = st.selectbox(\"Driving Experience\", OPTIONS[\"driver_exp\"])\n",
-    "            vehicle_relation = st.selectbox(\"Vehicle Driver Relation\", OPTIONS[\"vehicle_relation\"])\n",
-    "            service_year = st.selectbox(\"Vehicle Service Year\", OPTIONS[\"service_year\"])\n",
-    "            work_casualty = st.selectbox(\"Work of Casualty\", OPTIONS[\"work\"])\n",
-    "\n",
-    "        with col2:\n",
-    "            st.markdown(\"##### 🛣️ Environment & Road\")\n",
-    "            time = st.selectbox(\"Time of Day\", OPTIONS[\"time\"])\n",
-    "            day = st.selectbox(\"Day of Week\", OPTIONS[\"day\"])\n",
-    "            road_surface = st.selectbox(\"Road Surface Type\", OPTIONS[\"road_surface\"])\n",
-    "            weather = st.selectbox(\"Weather Condition\", OPTIONS[\"weather\"])\n",
-    "            light = st.selectbox(\"Light Condition\", OPTIONS[\"light\"])\n",
-    "\n",
-    "        with col3:\n",
-    "            st.markdown(\"##### 💥 Accident Context\")\n",
-    "            type_collision = st.selectbox(\"Type of Collision\", OPTIONS[\"collision\"])\n",
-    "            vehicle_movement = st.selectbox(\"Vehicle Movement\", OPTIONS[\"movement\"])\n",
-    "            cause = st.selectbox(\"Cause of Accident\", OPTIONS[\"cause\"])\n",
-    "            vehicles_involved = st.slider(\"Vehicles Involved\", 1, 10, 2)\n",
-    "            casualties = st.slider(\"Number of Casualties\", 1, 10, 1)\n",
-    "\n",
-    "        st.markdown(\"---\")\n",
-    "        submit = st.form_submit_button(\"⚡ Run Predictive Analysis\", use_container_width=True)\n",
-    "\n",
-    "    # Inference Execution\n",
-    "    if submit:\n",
-    "        if model is None or encoders is None or target_encoder is None:\n",
-    "            st.error(\"Model artifacts not loaded properly. Check file paths.\")\n",
-    "        else:\n",
-    "            try:\n",
-    "                input_dict = {\n",
-    "                    \"Time\": [time],\n",
-    "                    \"Day_of_week\": [day],\n",
-    "                    \"Age_band_of_driver\": [driver_age],\n",
-    "                    \"Driving_experience\": [driver_exp],\n",
-    "                    \"Vehicle_driver_relation\": [vehicle_relation],\n",
-    "                    \"Service_year_of_vehicle\": [service_year],\n",
-    "                    \"Road_surface_type\": [road_surface],\n",
-    "                    \"Weather_conditions\": [weather],\n",
-    "                    \"Light_conditions\": [light],\n",
-    "                    \"Type_of_collision\": [type_collision],\n",
-    "                    \"Vehicle_movement\": [vehicle_movement],\n",
-    "                    \"Work_of_casuality\": [work_casualty],\n",
-    "                    \"Cause_of_accident\": [cause],\n",
-    "                    \"Number_of_vehicles_involved\": [vehicles_involved],\n",
-    "                    \"Number_of_casualties\": [casualties]\n",
-    "                }\n",
-    "\n",
-    "                input_df = pd.DataFrame(input_dict)\n",
-    "\n",
-    "                # Preprocessing\n",
-    "                for col in input_df.select_dtypes(include=\"object\").columns:\n",
-    "                    input_df[col] = input_df[col].astype(str).str.strip().str.lower()\n",
-    "\n",
-    "                # Robust Categorical Encoding\n",
-    "                for col, le in encoders.items():\n",
-    "                    if col in input_df.columns:\n",
-    "                        known_classes = [str(c).lower() for c in le.classes_]\n",
-    "                        input_df[col] = input_df[col].apply(\n",
-    "                            lambda x: le.transform([x])[0] if x in known_classes else -1\n",
-    "                        )\n",
-    "\n",
-    "                # Generate Prediction & Probabilities\n",
-    "                pred = model.predict(input_df)[0]\n",
-    "                pred_label = str(target_encoder.inverse_transform([pred])[0])\n",
-    "                \n",
-    "                # Check for probability support\n",
-    "                probabilities = model.predict_proba(input_df)[0] if hasattr(model, \"predict_proba\") else None\n",
-    "\n",
-    "                # Display Results Section\n",
-    "                st.markdown(\"### 🎯 Inference Results\")\n",
-    "                \n",
-    "                res_col1, res_col2 = st.columns([1, 1])\n",
-    "\n",
-    "                with res_col1:\n",
-    "                    label_lower = pred_label.lower()\n",
-    "                    if \"slight\" in label_lower:\n",
-    "                        st.markdown(f'<div class=\"result-banner-slight\">Predicted Severity: {pred_label.upper()}</div>', unsafe_allow_html=True)\n",
-    "                    elif \"serious\" in label_lower:\n",
-    "                        st.markdown(f'<div class=\"result-banner-serious\">Predicted Severity: {pred_label.upper()}</div>', unsafe_allow_html=True)\n",
-    "                    else:\n",
-    "                        st.markdown(f'<div class=\"result-banner-fatal\">Predicted Severity: {pred_label.upper()}</div>', unsafe_allow_html=True)\n",
-    "\n",
-    "                with res_col2:\n",
-    "                    if probabilities is not None:\n",
-    "                        st.markdown(\"**Prediction Class Probabilities:**\")\n",
-    "                        class_names = target_encoder.classes_\n",
-    "                        prob_df = pd.DataFrame({\n",
-    "                            \"Class\": class_names,\n",
-    "                            \"Probability\": probabilities\n",
-    "                        })\n",
-    "                        st.bar_chart(prob_df.set_index(\"Class\"), height=180)\n",
-    "\n",
-    "            except Exception as e:\n",
-    "                st.error(f\"❌ Execution failure during prediction runtime:\\n\\n`{e}`\")\n",
-    "\n",
-    "# ------------------------------------------------------------------------------\n",
-    "# 6. TAB 2: MODEL INSIGHTS & ANALYTICS\n",
-    "# ------------------------------------------------------------------------------\n",
-    "with tab2:\n",
-    "    st.subheader(\"📌 Feature Importance & System Insights\")\n",
-    "    st.write(\"Understand feature impact using the XGBoost feature importance metrics.\")\n",
-    "    \n",
-    "    if model is not None and hasattr(model, \"feature_importances_\"):\n",
-    "        try:\n",
-    "            feature_names = [\n",
-    "                \"Time\", \"Day_of_week\", \"Age_band_of_driver\", \"Driving_experience\",\n",
-    "                \"Vehicle_driver_relation\", \"Service_year_of_vehicle\", \"Road_surface_type\",\n",
-    "                \"Weather_conditions\", \"Light_conditions\", \"Type_of_collision\",\n",
-    "                \"Vehicle_movement\", \"Work_of_casuality\", \"Cause_of_accident\",\n",
-    "                \"Number_of_vehicles_involved\", \"Number_of_casualties\"\n",
-    "            ]\n",
-    "            importances = model.feature_importances_\n",
-    "            \n",
-    "            fi_df = pd.DataFrame({\n",
-    "                \"Feature\": feature_names,\n",
-    "                \"Importance\": importances\n",
-    "            }).sort_values(by=\"Importance\", ascending=True)\n",
-    "\n",
-    "            st.bar_chart(fi_df.set_index(\"Feature\"), height=400)\n",
-    "        except Exception as e:\n",
-    "            st.info(\"Feature importance visualizer unavailable for current model format.\")\n",
-    "    else:\n",
-    "        st.info(\"Load a trained XGBoost model with `feature_importances_` to enable visual diagnostics.\")\n",
-    "        "
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "id": "8c719a39-0905-4d9e-9dcd-a9872db280b7",
-   "metadata": {},
-   "outputs": [],
-   "source": []
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3 (ipykernel)",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.12.8"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 5
-}
+import streamlit as st
+import pandas as pd
+import joblib
+
+# -----------------------------
+# 1. Load Model and Encoders
+# -----------------------------
+@st.cache_resource
+def load_assets():
+    try:
+        model = joblib.load("xgb_accident_model.pkl")
+        encoders = joblib.load("label_encoders.pkl")
+        target_encoder = joblib.load("target_encoder.pkl")
+        return model, encoders, target_encoder
+    except Exception as e:
+        st.error(f"Error loading model files: {e}")
+        return None, None, None
+
+model, encoders, target_encoder = load_assets()
+
+# -----------------------------
+# 2. Streamlit Page Setup
+# -----------------------------
+st.set_page_config(
+    page_title="Road Accident Severity Prediction",
+    page_icon="🚧",
+    layout="centered"
+)
+
+st.title("🚧 Road Accident Severity Prediction")
+st.markdown("Enter the accident details below to predict severity.")
+
+# -----------------------------
+# 3. Input Options
+# -----------------------------
+options_time = ["Day", "Night"]
+options_day = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+options_age = ['Under 18', '18-30', '31-50', 'Over 51']
+options_driver_exp = ['Below 1yr', '1-2yr', '2-5yr', '5-10yr', 'Above 10yr', 'No Licence']
+options_vehicle_relation = ['Employee', 'Owner']
+options_service_year = ['Below 1yr', '1-2yr', '2-5yrs', '5-10yrs', 'Above 10yr']
+options_road_surface_type = ['Asphalt roads', 'Gravel roads', 'Earth roads', 'Other']
+options_weather = ['Clear', 'Rainy', 'Foggy', 'Snowy']
+options_light = ['Daylight', 'Darkness - lights lit', 'Darkness - no lighting']
+options_type_of_collision = ['Vehicle with vehicle', 'Rollover', 'Collision with pedestrian', 'Collision with animal']
+options_vehicle_movement = ['Going straight', 'U-turn', 'Reversing', 'Overtaking', 'Waiting to go']
+options_work_of_casualty = ['Driver', 'Employee', 'Self-employed', 'Student', 'Unemployed']
+options_cause = ['Overspeed', 'No distancing', 'Careless driving', 'Overturning', 'Improper parking']
+
+# -----------------------------
+# 4. Input Form
+# -----------------------------
+with st.form("prediction_form"):
+    st.subheader("📝 Enter details below:")
+
+    time = st.selectbox("Select Time of Day", options_time)
+    day = st.selectbox("Day of Week", options_day)
+    driver_age = st.selectbox("Driver Age Band", options_age)
+    driver_exp = st.selectbox("Driving Experience", options_driver_exp)
+    vehicle_relation = st.selectbox("Vehicle Driver Relation", options_vehicle_relation)
+    service_year = st.selectbox("Vehicle Service Year", options_service_year)
+    road_surface = st.selectbox("Road Surface Type", options_road_surface_type)
+    weather = st.selectbox("Weather Condition", options_weather)
+    light = st.selectbox("Light Condition", options_light)
+    type_collision = st.selectbox("Type of Collision", options_type_of_collision)
+    vehicle_movement = st.selectbox("Vehicle Movement", options_vehicle_movement)
+    work_casualty = st.selectbox("Work of Casualty", options_work_of_casualty)
+    cause = st.selectbox("Cause of Accident", options_cause)
+    vehicles_involved = st.slider("Number of Vehicles Involved", 1, 10, 1)
+    casualties = st.slider("Number of Casualties", 1, 10, 1)
+
+    submit = st.form_submit_button("🚦 Predict Severity")
+
+# -----------------------------
+# 5. Prediction Logic
+# -----------------------------
+if submit:
+    if model is None:
+        st.error("Model not loaded properly.")
+    else:
+        try:
+            input_dict = {
+                "Time": [time],
+                "Day_of_week": [day],
+                "Age_band_of_driver": [driver_age],
+                "Driving_experience": [driver_exp],
+                "Vehicle_driver_relation": [vehicle_relation],
+                "Service_year_of_vehicle": [service_year],
+                "Road_surface_type": [road_surface],
+                "Weather_conditions": [weather],
+                "Light_conditions": [light],
+                "Type_of_collision": [type_collision],
+                "Vehicle_movement": [vehicle_movement],
+                "Work_of_casuality": [work_casualty],
+                "Cause_of_accident": [cause],
+                "Number_of_vehicles_involved": [vehicles_involved],
+                "Number_of_casualties": [casualties]
+            }
+
+            input_df = pd.DataFrame(input_dict)
+
+            # Text cleaning
+            for col in input_df.select_dtypes(include="object").columns:
+                input_df[col] = input_df[col].astype(str).str.strip().str.lower()
+
+            # Encode categorical features
+            for col, le in encoders.items():
+                if col in input_df.columns:
+                    known_classes = [str(c).lower() for c in le.classes_]
+                    input_df[col] = input_df[col].apply(
+                        lambda x: le.transform([x])[0] if x in known_classes else -1
+                    )
+
+            # Predict
+            pred = model.predict(input_df)[0]
+            pred_label = str(target_encoder.inverse_transform([pred])[0])
+
+            # Output UI
+            st.subheader("Prediction Result:")
+            if "slight" in pred_label.lower():
+                st.success(f"Severity: {pred_label}")
+            elif "serious" in pred_label.lower():
+                st.warning(f"Severity: {pred_label}")
+            else:
+                st.error(f"Severity: {pred_label}")
+
+        except Exception as e:
+            st.error(f"Prediction Error: {e}")
