@@ -1,0 +1,12 @@
+streamlit
+
+pandas
+
+scikit-learn
+
+joblib
+
+xgboost
+
+
+Pillow
