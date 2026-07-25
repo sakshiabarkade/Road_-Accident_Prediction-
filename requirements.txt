@@ -8,5 +8,5 @@ joblib
 
 xgboost
 
-
 Pillow
+plotly
