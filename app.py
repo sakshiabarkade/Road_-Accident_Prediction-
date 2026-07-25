@@ -1,5 +1,7 @@
-import streamlit as st
+import os
+import glob
 import pandas as pd
+import streamlit as st
 import plotly.express as px
 
 # --- PAGE CONFIGURATION ---
@@ -28,18 +30,35 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- LOAD DATA ---
+# --- SMART LOAD DATA FUNCTION ---
 @st.cache_data
 def load_data():
-    try:
-        # File is originally in CSV format despite .xls extension
-        df = pd.read_csv('RTA Dataset.xls')
-    except Exception:
-        try:
-            df = pd.read_excel('RTA Dataset.xls')
-        except Exception:
-            df = pd.read_csv('RTA Dataset.csv')
-    return df
+    # File options in order of priority
+    possible_files = [
+        'RTA Dataset.csv',
+        'RTA Dataset.xls',
+        'RTA Dataset.xlsx'
+    ]
+    
+    # Also search for any matching dynamic pattern in repository
+    found_files = glob.glob('*RTA*') + glob.glob('*rta*') + glob.glob('*.csv') + glob.glob('*.xls*')
+    all_targets = possible_files + found_files
+
+    for file_path in all_targets:
+        if os.path.exists(file_path):
+            try:
+                # First try reading as CSV
+                return pd.read_csv(file_path)
+            except Exception:
+                try:
+                    # Fallback to Excel reader
+                    return pd.read_excel(file_path)
+                except Exception:
+                    continue
+                    
+    # If no file found at all
+    st.error("❌ Dataset file nahi mili! Kripya check karein ki 'RTA Dataset.csv' ya 'RTA Dataset.xls' GitHub repo me uploaded hai ya nahi.")
+    st.stop()
 
 df = load_data()
 
@@ -51,35 +70,49 @@ st.markdown("Yeh dashboard road accident survey data ko analyze aur visualize ka
 st.sidebar.header("🔍 Filters")
 
 # Filter 1: Area Type (Replacing City)
-all_areas = df['Area_accident_occured'].dropna().unique().tolist()
-selected_area = st.sidebar.multiselect(
-    "Select Area Type:",
-    options=all_areas,
-    default=all_areas[:5] if len(all_areas) >= 5 else all_areas
-)
+if 'Area_accident_occured' in df.columns:
+    all_areas = df['Area_accident_occured'].dropna().unique().tolist()
+    selected_area = st.sidebar.multiselect(
+        "Select Area Type:",
+        options=all_areas,
+        default=all_areas[:5] if len(all_areas) >= 5 else all_areas
+    )
+else:
+    all_areas = []
+    selected_area = []
 
 # Filter 2: Severity Level
-all_severities = df['Accident_severity'].dropna().unique().tolist()
-selected_severity = st.sidebar.multiselect(
-    "Select Severity Level:",
-    options=all_severities,
-    default=all_severities
-)
+if 'Accident_severity' in df.columns:
+    all_severities = df['Accident_severity'].dropna().unique().tolist()
+    selected_severity = st.sidebar.multiselect(
+        "Select Severity Level:",
+        options=all_severities,
+        default=all_severities
+    )
+else:
+    all_severities = []
+    selected_severity = []
 
-# Filter Data Based on User Selection
-filtered_df = df[
-    (df['Area_accident_occured'].isin(selected_area)) & 
-    (df['Accident_severity'].isin(selected_severity))
-]
+# Filtering Data Based on Selections
+filtered_df = df.copy()
+if selected_area and 'Area_accident_occured' in filtered_df.columns:
+    filtered_df = filtered_df[filtered_df['Area_accident_occured'].isin(selected_area)]
+if selected_severity and 'Accident_severity' in filtered_df.columns:
+    filtered_df = filtered_df[filtered_df['Accident_severity'].isin(selected_severity)]
 
 # --- KEY METRICS (KPIs) ---
 st.markdown("### 📈 Key Metrics")
 col1, col2, col3, col4 = st.columns(4)
 
 total_accidents = len(filtered_df)
-total_casualties = filtered_df['Number_of_casualties'].sum() if total_accidents > 0 else 0
-fatal_accidents = len(filtered_df[filtered_df['Accident_severity'].str.contains('Fatal', case=False, na=False)])
-avg_casualties = round(filtered_df['Number_of_casualties'].mean(), 2) if total_accidents > 0 else 0
+total_casualties = filtered_df['Number_of_casualties'].sum() if ('Number_of_casualties' in filtered_df.columns and total_accidents > 0) else 0
+
+if 'Accident_severity' in filtered_df.columns:
+    fatal_accidents = len(filtered_df[filtered_df['Accident_severity'].astype(str).str.contains('Fatal', case=False, na=False)])
+else:
+    fatal_accidents = 0
+
+avg_casualties = round(filtered_df['Number_of_casualties'].mean(), 2) if ('Number_of_casualties' in filtered_df.columns and total_accidents > 0) else 0
 
 col1.metric("Total Accidents", f"{total_accidents:,}")
 col2.metric("Total Casualties", f"{total_casualties:,}")
@@ -96,7 +129,7 @@ chart_col1, chart_col2 = st.columns(2)
 # Chart 1: Accidents by Area & Severity (Bar Chart)
 with chart_col1:
     st.subheader("Accidents by Area & Severity")
-    if not filtered_df.empty:
+    if not filtered_df.empty and 'Area_accident_occured' in filtered_df.columns and 'Accident_severity' in filtered_df.columns:
         fig_area = px.bar(
             filtered_df, 
             x='Area_accident_occured', 
@@ -119,7 +152,7 @@ with chart_col1:
 # Chart 2: Impact of Weather Conditions (Donut Chart)
 with chart_col2:
     st.subheader("Impact of Weather Conditions")
-    if not filtered_df.empty:
+    if not filtered_df.empty and 'Weather_conditions' in filtered_df.columns:
         fig_weather = px.pie(
             filtered_df, 
             names='Weather_conditions', 
@@ -140,7 +173,7 @@ chart_col3, chart_col4 = st.columns(2)
 # Chart 3: Accidents by Day of Week (Histogram)
 with chart_col3:
     st.subheader("Accidents by Day of Week")
-    if not filtered_df.empty:
+    if not filtered_df.empty and 'Day_of_week' in filtered_df.columns and 'Accident_severity' in filtered_df.columns:
         fig_day = px.histogram(
             filtered_df, 
             x='Day_of_week', 
@@ -161,7 +194,7 @@ with chart_col3:
 # Chart 4: Top Causes of Accidents (Horizontal Bar Chart)
 with chart_col4:
     st.subheader("Top Causes of Accidents")
-    if not filtered_df.empty:
+    if not filtered_df.empty and 'Cause_of_accident' in filtered_df.columns:
         cause_counts = filtered_df['Cause_of_accident'].value_counts().reset_index()
         cause_counts.columns = ['Cause', 'Count']
         fig_cause = px.bar(
