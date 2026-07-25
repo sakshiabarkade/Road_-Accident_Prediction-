@@ -1,6 +1,7 @@
 import os
 import glob
 import pandas as pd
+import numpy as np
 import streamlit as st
 import plotly.express as px
 
@@ -30,37 +31,54 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- SMART LOAD DATA FUNCTION ---
+# --- AUTOMATED DATA CLEANING FUNCTION ---
 @st.cache_data
-def load_data():
-    # File options in order of priority
-    possible_files = [
-        'RTA Dataset.csv',
-        'RTA Dataset.xls',
-        'RTA Dataset.xlsx'
-    ]
-    
-    # Also search for any matching dynamic pattern in repository
+def load_and_clean_data():
+    possible_files = ['RTA Dataset.csv', 'RTA Dataset.xls', 'RTA Dataset.xlsx']
     found_files = glob.glob('*RTA*') + glob.glob('*rta*') + glob.glob('*.csv') + glob.glob('*.xls*')
     all_targets = possible_files + found_files
 
+    df = None
     for file_path in all_targets:
         if os.path.exists(file_path):
             try:
-                # First try reading as CSV
-                return pd.read_csv(file_path)
+                df = pd.read_csv(file_path)
+                break
             except Exception:
                 try:
-                    # Fallback to Excel reader
-                    return pd.read_excel(file_path)
+                    df = pd.read_excel(file_path)
+                    break
                 except Exception:
                     continue
-                    
-    # If no file found at all
-    st.error("❌ Dataset file nahi mili! Kripya check karein ki 'RTA Dataset.csv' ya 'RTA Dataset.xls' GitHub repo me uploaded hai ya nahi.")
-    st.stop()
 
-df = load_data()
+    if df is None:
+        st.error("❌ Dataset file nahi mili! Kripya check karein ki 'RTA Dataset.csv' ya 'RTA Dataset.xls' GitHub repo me uploaded hai ya nahi.")
+        st.stop()
+
+    # --- DATA CLEANING STEPS ---
+    
+    # 1. Fill missing values (NaNs) with 'Unknown' for string columns
+    categorical_cols = df.select_dtypes(include=['object']).columns
+    for col in categorical_cols:
+        df[col] = df[col].fillna("Unknown")
+        # Standardize 'na' strings if present
+        df[col] = df[col].replace({'na': 'Unknown', 'n/a': 'Unknown', 'NA': 'Unknown'})
+
+    # 2. Fill missing numeric values with Median
+    numeric_cols = df.select_dtypes(include=[np.number]).columns
+    for col in numeric_cols:
+        df[col] = df[col].fillna(df[col].median())
+
+    # 3. Clean specific columns if available
+    if 'Number_of_casualties' in df.columns:
+        df['Number_of_casualties'] = pd.to_numeric(df['Number_of_casualties'], errors='coerce').fillna(1)
+        
+    if 'Number_of_vehicles_involved' in df.columns:
+        df['Number_of_vehicles_involved'] = pd.to_numeric(df['Number_of_vehicles_involved'], errors='coerce').fillna(1)
+
+    return df
+
+df = load_and_clean_data()
 
 # --- TITLE & HEADER ---
 st.title("🚨 Road Accident Survey & Analysis Dashboard")
@@ -69,28 +87,30 @@ st.markdown("Yeh dashboard road accident survey data ko analyze aur visualize ka
 # --- SIDEBAR FILTERS ---
 st.sidebar.header("🔍 Filters")
 
-# Filter 1: Area Type (Replacing City)
+# Filter 1: Area Type
 if 'Area_accident_occured' in df.columns:
-    all_areas = df['Area_accident_occured'].dropna().unique().tolist()
+    # Exclude 'Unknown' from filter options if preferred, or keep it
+    all_areas = [area for area in df['Area_accident_occured'].unique() if area != 'Unknown']
+    if not all_areas:
+        all_areas = df['Area_accident_occured'].unique().tolist()
+        
     selected_area = st.sidebar.multiselect(
         "Select Area Type:",
         options=all_areas,
         default=all_areas[:5] if len(all_areas) >= 5 else all_areas
     )
 else:
-    all_areas = []
     selected_area = []
 
 # Filter 2: Severity Level
 if 'Accident_severity' in df.columns:
-    all_severities = df['Accident_severity'].dropna().unique().tolist()
+    all_severities = df['Accident_severity'].unique().tolist()
     selected_severity = st.sidebar.multiselect(
         "Select Severity Level:",
         options=all_severities,
         default=all_severities
     )
 else:
-    all_severities = []
     selected_severity = []
 
 # Filtering Data Based on Selections
@@ -105,7 +125,7 @@ st.markdown("### 📈 Key Metrics")
 col1, col2, col3, col4 = st.columns(4)
 
 total_accidents = len(filtered_df)
-total_casualties = filtered_df['Number_of_casualties'].sum() if ('Number_of_casualties' in filtered_df.columns and total_accidents > 0) else 0
+total_casualties = int(filtered_df['Number_of_casualties'].sum()) if ('Number_of_casualties' in filtered_df.columns and total_accidents > 0) else 0
 
 if 'Accident_severity' in filtered_df.columns:
     fatal_accidents = len(filtered_df[filtered_df['Accident_severity'].astype(str).str.contains('Fatal', case=False, na=False)])
@@ -131,7 +151,7 @@ with chart_col1:
     st.subheader("Accidents by Area & Severity")
     if not filtered_df.empty and 'Area_accident_occured' in filtered_df.columns and 'Accident_severity' in filtered_df.columns:
         fig_area = px.bar(
-            filtered_df, 
+            filtered_df[filtered_df['Area_accident_occured'] != 'Unknown'], 
             x='Area_accident_occured', 
             color='Accident_severity', 
             barmode='group',
@@ -154,7 +174,7 @@ with chart_col2:
     st.subheader("Impact of Weather Conditions")
     if not filtered_df.empty and 'Weather_conditions' in filtered_df.columns:
         fig_weather = px.pie(
-            filtered_df, 
+            filtered_df[filtered_df['Weather_conditions'] != 'Unknown'], 
             names='Weather_conditions', 
             hole=0.45,
             color_discrete_sequence=px.colors.sequential.RdBu,
@@ -195,7 +215,8 @@ with chart_col3:
 with chart_col4:
     st.subheader("Top Causes of Accidents")
     if not filtered_df.empty and 'Cause_of_accident' in filtered_df.columns:
-        cause_counts = filtered_df['Cause_of_accident'].value_counts().reset_index()
+        cause_df = filtered_df[filtered_df['Cause_of_accident'] != 'Unknown']
+        cause_counts = cause_df['Cause_of_accident'].value_counts().reset_index()
         cause_counts.columns = ['Cause', 'Count']
         fig_cause = px.bar(
             cause_counts.head(6), 
@@ -217,5 +238,5 @@ with chart_col4:
 
 # --- RAW DATA VIEW ---
 st.divider()
-st.markdown("### 📄 Filtered Data Preview")
+st.markdown("### 📄 Cleaned Data Preview")
 st.dataframe(filtered_df, use_container_width=True)
