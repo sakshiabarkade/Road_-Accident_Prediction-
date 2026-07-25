@@ -2,9 +2,49 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# -----------------------------
-# 1. Load Model and Encoders
-# -----------------------------
+# ------------------------------------------------------------------------------
+# 1. PAGE SETUP & MODERN STYLING
+# ------------------------------------------------------------------------------
+st.set_page_config(
+    page_title="AI Road Safety Predictor",
+    page_icon="⚡",
+    layout="wide"
+)
+
+# Modern UI Styling (Soft shadows, rounded corners, clean fonts)
+st.markdown("""
+    <style>
+    .main { padding-top: 1.5rem; }
+    
+    .stButton>button {
+        background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.6rem 1rem;
+        font-weight: bold;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .card {
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid #eef2f5;
+        margin-bottom: 20px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# ------------------------------------------------------------------------------
+# 2. MODEL & ENCODER LOADING
+# ------------------------------------------------------------------------------
 @st.cache_resource
 def load_assets():
     try:
@@ -13,116 +53,108 @@ def load_assets():
         target_encoder = joblib.load("target_encoder.pkl")
         return model, encoders, target_encoder
     except Exception as e:
-        st.error(f"Error loading model files: {e}")
+        st.error(f"⚠️ Error loading model files: {e}")
         return None, None, None
 
 model, encoders, target_encoder = load_assets()
 
-# -----------------------------
-# 2. Streamlit Page Setup
-# -----------------------------
-st.set_page_config(
-    page_title="Road Accident Severity Prediction",
-    page_icon="🚧",
-    layout="centered"
-)
+# ------------------------------------------------------------------------------
+# 3. HEADER
+# ------------------------------------------------------------------------------
+st.title("🚨 Quick Accident Risk Estimator")
+st.caption("⚡ Get instant accident severity insights in less than 5 seconds using 4 key metrics.")
 
-st.title("🚧 Road Accident Severity Prediction")
-st.markdown("Enter the accident details below to predict severity.")
+# ------------------------------------------------------------------------------
+# 4. FAST 4-INPUT UI LAYOUT
+# ------------------------------------------------------------------------------
+col_input, col_result = st.columns([1.1, 1], gap="large")
 
-# -----------------------------
-# 3. Input Options
-# -----------------------------
-options_time = ["Day", "Night"]
-options_day = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-options_age = ['Under 18', '18-30', '31-50', 'Over 51']
-options_driver_exp = ['Below 1yr', '1-2yr', '2-5yr', '5-10yr', 'Above 10yr', 'No Licence']
-options_vehicle_relation = ['Employee', 'Owner']
-options_service_year = ['Below 1yr', '1-2yr', '2-5yrs', '5-10yrs', 'Above 10yr']
-options_road_surface_type = ['Asphalt roads', 'Gravel roads', 'Earth roads', 'Other']
-options_weather = ['Clear', 'Rainy', 'Foggy', 'Snowy']
-options_light = ['Daylight', 'Darkness - lights lit', 'Darkness - no lighting']
-options_type_of_collision = ['Vehicle with vehicle', 'Rollover', 'Collision with pedestrian', 'Collision with animal']
-options_vehicle_movement = ['Going straight', 'U-turn', 'Reversing', 'Overtaking', 'Waiting to go']
-options_work_of_casualty = ['Driver', 'Employee', 'Self-employed', 'Student', 'Unemployed']
-options_cause = ['Overspeed', 'No distancing', 'Careless driving', 'Overturning', 'Improper parking']
+with col_input:
+    st.subheader("🎯 Key Impact Factors")
+    
+    # 4 High-Impact Inputs
+    weather = st.selectbox("🌧️ Weather Condition", ['Clear', 'Rainy', 'Foggy', 'Snowy'])
+    cause = st.selectbox("⚠️ Primary Cause", ['Overspeed', 'No distancing', 'Careless driving', 'Overturning', 'Improper parking'])
+    vehicles_involved = st.slider("🚗 Vehicles Involved", 1, 10, 2)
+    casualties = st.slider("🩹 Number of Casualties", 1, 10, 1)
 
-# -----------------------------
-# 4. Input Form
-# -----------------------------
-with st.form("prediction_form"):
-    st.subheader("📝 Enter details below:")
+    # Advanced Settings (Hidden by default so users aren't overwhelmed)
+    with st.expander("⚙️ Advanced Parameters (Optional)", expanded=False):
+        time = st.selectbox("Time of Day", ["Day", "Night"])
+        day = st.selectbox("Day of Week", ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
+        driver_age = st.selectbox("Driver Age Band", ['18-30', 'Under 18', '31-50', 'Over 51'])
+        driver_exp = st.selectbox("Driving Experience", ['2-5yr', 'Below 1yr', '1-2yr', '5-10yr', 'Above 10yr', 'No Licence'])
+        road_surface = st.selectbox("Road Surface", ['Asphalt roads', 'Gravel roads', 'Earth roads', 'Other'])
+        light = st.selectbox("Light Condition", ['Daylight', 'Darkness - lights lit', 'Darkness - no lighting'])
+        type_collision = st.selectbox("Type of Collision", ['Vehicle with vehicle', 'Rollover', 'Collision with pedestrian', 'Collision with animal'])
+        vehicle_movement = st.selectbox("Vehicle Movement", ['Going straight', 'U-turn', 'Reversing', 'Overtaking', 'Waiting to go'])
+        vehicle_relation = 'Owner'
+        service_year = '2-5yrs'
+        work_casualty = 'Driver'
 
-    time = st.selectbox("Select Time of Day", options_time)
-    day = st.selectbox("Day of Week", options_day)
-    driver_age = st.selectbox("Driver Age Band", options_age)
-    driver_exp = st.selectbox("Driving Experience", options_driver_exp)
-    vehicle_relation = st.selectbox("Vehicle Driver Relation", options_vehicle_relation)
-    service_year = st.selectbox("Vehicle Service Year", options_service_year)
-    road_surface = st.selectbox("Road Surface Type", options_road_surface_type)
-    weather = st.selectbox("Weather Condition", options_weather)
-    light = st.selectbox("Light Condition", options_light)
-    type_collision = st.selectbox("Type of Collision", options_type_of_collision)
-    vehicle_movement = st.selectbox("Vehicle Movement", options_vehicle_movement)
-    work_casualty = st.selectbox("Work of Casualty", options_work_of_casualty)
-    cause = st.selectbox("Cause of Accident", options_cause)
-    vehicles_involved = st.slider("Number of Vehicles Involved", 1, 10, 1)
-    casualties = st.slider("Number of Casualties", 1, 10, 1)
+    submit = st.button("⚡ Analyze Severity", use_container_width=True)
 
-    submit = st.form_submit_button("🚦 Predict Severity")
+# ------------------------------------------------------------------------------
+# 5. PREDICTION & DISPLAY RESULTS
+# ------------------------------------------------------------------------------
+with col_result:
+    st.subheader("📊 Instant Risk Assessment")
+    
+    if submit:
+        if model is None:
+            st.error("Model artifacts not loaded.")
+        else:
+            try:
+                # Build complete dictionary using 4 active inputs + defaults for the rest
+                input_dict = {
+                    "Time": [time],
+                    "Day_of_week": [day],
+                    "Age_band_of_driver": [driver_age],
+                    "Driving_experience": [driver_exp],
+                    "Vehicle_driver_relation": [vehicle_relation],
+                    "Service_year_of_vehicle": [service_year],
+                    "Road_surface_type": [road_surface],
+                    "Weather_conditions": [weather],
+                    "Light_conditions": [light],
+                    "Type_of_collision": [type_collision],
+                    "Vehicle_movement": [vehicle_movement],
+                    "Work_of_casuality": [work_casualty],
+                    "Cause_of_accident": [cause],
+                    "Number_of_vehicles_involved": [vehicles_involved],
+                    "Number_of_casualties": [casualties]
+                }
 
-# -----------------------------
-# 5. Prediction Logic
-# -----------------------------
-if submit:
-    if model is None:
-        st.error("Model not loaded properly.")
+                input_df = pd.DataFrame(input_dict)
+
+                # Encoding transformation logic
+                for col, le in encoders.items():
+                    if col in input_df.columns:
+                        val = str(input_df[col].iloc[0]).strip().lower()
+                        class_map = {str(c).strip().lower(): c for c in le.classes_}
+                        
+                        if val in class_map:
+                            matched_class = class_map[val]
+                            input_df[col] = le.transform([matched_class])[0]
+                        else:
+                            input_df[col] = 0
+
+                # Predict
+                pred = model.predict(input_df)[0]
+                pred_label = str(target_encoder.inverse_transform([pred])[0])
+                pred_lower = pred_label.lower()
+
+                # Visual Output Cards
+                if "slight" in pred_lower:
+                    st.success(f"### 🟢 Prediction: {pred_label.upper()}")
+                    st.info("Low risk crash environment detected. Minor damage predicted.")
+                elif "serious" in pred_lower:
+                    st.warning(f"### 🟡 Prediction: {pred_label.upper()}")
+                    st.write(" Moderate to High impact risk detected. Safety interventions required.")
+                else:
+                    st.error(f"### 🔴 Prediction: {pred_label.upper()}")
+                    st.write(" Critical severity level predicted. Immediate safety measures recommended.")
+
+            except Exception as e:
+                st.error(f"Prediction Error: {e}")
     else:
-        try:
-            input_dict = {
-                "Time": [time],
-                "Day_of_week": [day],
-                "Age_band_of_driver": [driver_age],
-                "Driving_experience": [driver_exp],
-                "Vehicle_driver_relation": [vehicle_relation],
-                "Service_year_of_vehicle": [service_year],
-                "Road_surface_type": [road_surface],
-                "Weather_conditions": [weather],
-                "Light_conditions": [light],
-                "Type_of_collision": [type_collision],
-                "Vehicle_movement": [vehicle_movement],
-                "Work_of_casuality": [work_casualty],
-                "Cause_of_accident": [cause],
-                "Number_of_vehicles_involved": [vehicles_involved],
-                "Number_of_casualties": [casualties]
-            }
-
-            input_df = pd.DataFrame(input_dict)
-
-            # Text cleaning
-            for col in input_df.select_dtypes(include="object").columns:
-                input_df[col] = input_df[col].astype(str).str.strip().str.lower()
-
-            # Encode categorical features
-            for col, le in encoders.items():
-                if col in input_df.columns:
-                    known_classes = [str(c).lower() for c in le.classes_]
-                    input_df[col] = input_df[col].apply(
-                        lambda x: le.transform([x])[0] if x in known_classes else -1
-                    )
-
-            # Predict
-            pred = model.predict(input_df)[0]
-            pred_label = str(target_encoder.inverse_transform([pred])[0])
-
-            # Output UI
-            st.subheader("Prediction Result:")
-            if "slight" in pred_label.lower():
-                st.success(f"Severity: {pred_label}")
-            elif "serious" in pred_label.lower():
-                st.warning(f"Severity: {pred_label}")
-            else:
-                st.error(f"Severity: {pred_label}")
-
-        except Exception as e:
-            st.error(f"Prediction Error: {e}")
+        st.info("👈 Select parameters on the left and click **'Analyze Severity'** to generate instant results.")
